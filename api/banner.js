@@ -1,7 +1,7 @@
-const axios = require('axios');
-const Jimp = require('jimp');
+import axios from 'axios';
+import Jimp from 'jimp';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
