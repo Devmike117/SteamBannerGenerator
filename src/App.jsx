@@ -398,6 +398,13 @@ export default function SteamBanner() {
                 </div>
               </div>
 
+              <div style={{ backgroundColor: '#16213e', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
+                <p style={{ color: '#93c5fd', fontSize: '0.875rem', margin: '0 0 0.5rem 0' }}>Descripción</p>
+                <p style={{ color: '#cbd5e1', fontSize: '0.95rem', margin: 0, lineHeight: '1.5' }}>
+                  {selectedGame.description}
+                </p>
+              </div>
+
               <button
                 onClick={() => setSelectedGame(null)}
                 style={{

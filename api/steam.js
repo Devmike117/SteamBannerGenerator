@@ -88,12 +88,40 @@ export default async (req, res) => {
         appid: game.appid
       }));
 
+    // Fetch descriptions for each game
+    const gamesWithDescriptions = await Promise.all(
+      games.map(async (game) => {
+        try {
+          const appDetailsResp = await axios.get('https://store.steampowered.com/api/appdetails', {
+            params: {
+              appids: game.appid
+            },
+            timeout: 5000
+          });
+
+          const appData = appDetailsResp.data?.[game.appid]?.data;
+          const description = appData?.short_description || 'Sin descripción disponible';
+
+          return {
+            ...game,
+            description
+          };
+        } catch (err) {
+          console.error(`Error fetching description for app ${game.appid}:`, err.message);
+          return {
+            ...game,
+            description: 'Sin descripción disponible'
+          };
+        }
+      })
+    );
+
     res.json({
       profile: {
         username: playerData.personaname,
         avatar: playerData.avatarfull
       },
-      games
+      games: gamesWithDescriptions
     });
   } catch (error) {
     console.error('Error fetching Steam data:', error.response ? error.response.data : error.message);
