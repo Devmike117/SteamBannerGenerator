@@ -148,11 +148,17 @@ export default function SteamBanner() {
     if (timePeriod === 'all') {
       return games;
     } else if (timePeriod === 'year') {
-      // Mostrar aproximadamente 60% de los juegos (simulando juegos jugados este año)
-      return games.slice(0, Math.ceil(games.length * 0.6));
+      // Juegos jugados recientemente (últimas 2 semanas o con horas significativas)
+      return games
+        .filter(game => game.hours_2weeks > 0)
+        .sort((a, b) => b.hours_2weeks - a.hours_2weeks)
+        .slice(0, Math.ceil(games.length * 0.6));
     } else if (timePeriod === 'month') {
-      // Mostrar aproximadamente 30% de los juegos (simulando juegos jugados este mes)
-      return games.slice(0, Math.ceil(games.length * 0.3));
+      // Juegos jugados muy recientemente (últimas 2 semanas con más horas)
+      return games
+        .filter(game => game.hours_2weeks > 0)
+        .sort((a, b) => b.hours_2weeks - a.hours_2weeks)
+        .slice(0, Math.ceil(games.length * 0.3));
     }
     return games;
   };

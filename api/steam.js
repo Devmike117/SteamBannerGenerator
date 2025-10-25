@@ -84,6 +84,7 @@ export default async (req, res) => {
       .map(game => ({
         name: game.name,
         hours: Math.round((game.playtime_forever || 0) / 60),
+        hours_2weeks: Math.round((game.playtime_2weeks || 0) / 60),
         image: `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`,
         appid: game.appid
       }));
