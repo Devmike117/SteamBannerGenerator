@@ -8,7 +8,6 @@ export default function SteamBanner() {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [timePeriod, setTimePeriod] = useState('all'); // 'all', 'year', 'month'
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -112,12 +111,11 @@ export default function SteamBanner() {
 
   {/* Calcular grid masónico basado en horas jugadas */}
   const getGameLayout = () => {
-    const filteredGames = getFilteredGames();
-    if (filteredGames.length === 0) return [];
+    if (games.length === 0) return [];
 
-    const maxHours = Math.max(...filteredGames.map(g => g.hours));
+    const maxHours = Math.max(...games.map(g => g.hours));
     
-    return filteredGames.map((game, index) => {
+    return games.map((game, index) => {
       const percentage = (game.hours / maxHours) * 100;
       let gridSpan; 
       if (percentage > 80) {
@@ -137,34 +135,14 @@ export default function SteamBanner() {
   };
 
   {/* Calcular número dinámico de columnas para evitar espacios vacíos */}
-  const calculateColumns = (gamesToCalculate) => {
-    const totalSpans = gamesToCalculate.reduce((sum, g) => sum + g.gridSpan, 0);
+  const calculateColumns = () => {
+    const totalSpans = layoutGames.reduce((sum, g) => sum + g.gridSpan, 0);
     const avgRowItems = Math.ceil(Math.sqrt(totalSpans / 1.5));
     return Math.max(3, Math.min(5, avgRowItems));
   };
 
-  {/* Filtrar juegos por período de tiempo */}
-  const getFilteredGames = () => {
-    if (timePeriod === 'all') {
-      return games;
-    } else if (timePeriod === 'year') {
-      // Juegos jugados recientemente (últimas 2 semanas o con horas significativas)
-      return games
-        .filter(game => game.hours_2weeks > 0)
-        .sort((a, b) => b.hours_2weeks - a.hours_2weeks)
-        .slice(0, Math.ceil(games.length * 0.6));
-    } else if (timePeriod === 'month') {
-      // Juegos jugados muy recientemente (últimas 2 semanas con más horas)
-      return games
-        .filter(game => game.hours_2weeks > 0)
-        .sort((a, b) => b.hours_2weeks - a.hours_2weeks)
-        .slice(0, Math.ceil(games.length * 0.3));
-    }
-    return games;
-  };
-
   const layoutGames = getGameLayout();
-  const gridColumns = calculateColumns(layoutGames);
+  const gridColumns = calculateColumns();
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '2rem' }}>
@@ -211,80 +189,6 @@ export default function SteamBanner() {
             </div>
             <p style={{ marginTop: '0.25rem', color: '#fbbf24', margin: '0.5rem 0 0 0' }}>Tu perfil de Steam debe ser público</p>
           </div>
-
-          {games.length > 0 && (
-            <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(59, 130, 246, 0.3)' }}>
-              <p style={{ color: '#93c5fd', fontSize: '0.875rem', marginBottom: '1rem' }}>Filtrar por período:</p>
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => setTimePeriod('all')}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: timePeriod === 'all' ? '#2563eb' : '#334155',
-                    color: 'white',
-                    fontWeight: '600',
-                    borderRadius: '0.5rem',
-                    border: '1px solid ' + (timePeriod === 'all' ? '#1d4ed8' : '#475569'),
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    fontSize: '0.875rem'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (timePeriod !== 'all') e.target.style.backgroundColor = '#475569';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (timePeriod !== 'all') e.target.style.backgroundColor = '#334155';
-                  }}
-                >
-                  Todo el tiempo
-                </button>
-                <button
-                  onClick={() => setTimePeriod('year')}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: timePeriod === 'year' ? '#2563eb' : '#334155',
-                    color: 'white',
-                    fontWeight: '600',
-                    borderRadius: '0.5rem',
-                    border: '1px solid ' + (timePeriod === 'year' ? '#1d4ed8' : '#475569'),
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    fontSize: '0.875rem'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (timePeriod !== 'year') e.target.style.backgroundColor = '#475569';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (timePeriod !== 'year') e.target.style.backgroundColor = '#334155';
-                  }}
-                >
-                  Este año
-                </button>
-                <button
-                  onClick={() => setTimePeriod('month')}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: timePeriod === 'month' ? '#2563eb' : '#334155',
-                    color: 'white',
-                    fontWeight: '600',
-                    borderRadius: '0.5rem',
-                    border: '1px solid ' + (timePeriod === 'month' ? '#1d4ed8' : '#475569'),
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    fontSize: '0.875rem'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (timePeriod !== 'month') e.target.style.backgroundColor = '#475569';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (timePeriod !== 'month') e.target.style.backgroundColor = '#334155';
-                  }}
-                >
-                  Este mes
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         {games.length > 0 && (
