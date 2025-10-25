@@ -8,6 +8,7 @@ export default function SteamBanner() {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [timePeriod, setTimePeriod] = useState('all'); // 'all', 'year', 'month'
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -141,6 +142,14 @@ export default function SteamBanner() {
     return Math.max(3, Math.min(5, avgRowItems));
   };
 
+  {/* Filtrar juegos por período de tiempo */}
+  const getFilteredGames = () => {
+    if (timePeriod === 'all') return games;
+    
+    // Para 'year' y 'month' mostrar todos los juegos (en el futuro podrías filtrar por estadísticas reales si steam api lo permite)
+    return games;
+  };
+
   const layoutGames = getGameLayout();
   const gridColumns = calculateColumns();
 
@@ -189,6 +198,80 @@ export default function SteamBanner() {
             </div>
             <p style={{ marginTop: '0.25rem', color: '#fbbf24', margin: '0.5rem 0 0 0' }}>Tu perfil de Steam debe ser público</p>
           </div>
+
+          {games.length > 0 && (
+            <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(59, 130, 246, 0.3)' }}>
+              <p style={{ color: '#93c5fd', fontSize: '0.875rem', marginBottom: '1rem' }}>Filtrar por período:</p>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setTimePeriod('all')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: timePeriod === 'all' ? '#2563eb' : '#334155',
+                    color: 'white',
+                    fontWeight: '600',
+                    borderRadius: '0.5rem',
+                    border: '1px solid ' + (timePeriod === 'all' ? '#1d4ed8' : '#475569'),
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    fontSize: '0.875rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (timePeriod !== 'all') e.target.style.backgroundColor = '#475569';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (timePeriod !== 'all') e.target.style.backgroundColor = '#334155';
+                  }}
+                >
+                  Todo el tiempo
+                </button>
+                <button
+                  onClick={() => setTimePeriod('year')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: timePeriod === 'year' ? '#2563eb' : '#334155',
+                    color: 'white',
+                    fontWeight: '600',
+                    borderRadius: '0.5rem',
+                    border: '1px solid ' + (timePeriod === 'year' ? '#1d4ed8' : '#475569'),
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    fontSize: '0.875rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (timePeriod !== 'year') e.target.style.backgroundColor = '#475569';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (timePeriod !== 'year') e.target.style.backgroundColor = '#334155';
+                  }}
+                >
+                  Este año
+                </button>
+                <button
+                  onClick={() => setTimePeriod('month')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: timePeriod === 'month' ? '#2563eb' : '#334155',
+                    color: 'white',
+                    fontWeight: '600',
+                    borderRadius: '0.5rem',
+                    border: '1px solid ' + (timePeriod === 'month' ? '#1d4ed8' : '#475569'),
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    fontSize: '0.875rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (timePeriod !== 'month') e.target.style.backgroundColor = '#475569';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (timePeriod !== 'month') e.target.style.backgroundColor = '#334155';
+                  }}
+                >
+                  Este mes
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {games.length > 0 && (
