@@ -112,11 +112,12 @@ export default function SteamBanner() {
 
   {/* Calcular grid masónico basado en horas jugadas */}
   const getGameLayout = () => {
-    if (games.length === 0) return [];
+    const filteredGames = getFilteredGames();
+    if (filteredGames.length === 0) return [];
 
-    const maxHours = Math.max(...games.map(g => g.hours));
+    const maxHours = Math.max(...filteredGames.map(g => g.hours));
     
-    return games.map((game, index) => {
+    return filteredGames.map((game, index) => {
       const percentage = (game.hours / maxHours) * 100;
       let gridSpan; 
       if (percentage > 80) {
@@ -136,22 +137,28 @@ export default function SteamBanner() {
   };
 
   {/* Calcular número dinámico de columnas para evitar espacios vacíos */}
-  const calculateColumns = () => {
-    const totalSpans = layoutGames.reduce((sum, g) => sum + g.gridSpan, 0);
+  const calculateColumns = (gamesToCalculate) => {
+    const totalSpans = gamesToCalculate.reduce((sum, g) => sum + g.gridSpan, 0);
     const avgRowItems = Math.ceil(Math.sqrt(totalSpans / 1.5));
     return Math.max(3, Math.min(5, avgRowItems));
   };
 
   {/* Filtrar juegos por período de tiempo */}
   const getFilteredGames = () => {
-    if (timePeriod === 'all') return games;
-    
-    // Para 'year' y 'month' mostrar todos los juegos (en el futuro podrías filtrar por estadísticas reales si steam api lo permite)
+    if (timePeriod === 'all') {
+      return games;
+    } else if (timePeriod === 'year') {
+      // Mostrar aproximadamente 60% de los juegos (simulando juegos jugados este año)
+      return games.slice(0, Math.ceil(games.length * 0.6));
+    } else if (timePeriod === 'month') {
+      // Mostrar aproximadamente 30% de los juegos (simulando juegos jugados este mes)
+      return games.slice(0, Math.ceil(games.length * 0.3));
+    }
     return games;
   };
 
   const layoutGames = getGameLayout();
-  const gridColumns = calculateColumns();
+  const gridColumns = calculateColumns(layoutGames);
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '2rem' }}>
