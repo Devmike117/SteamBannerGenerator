@@ -77,10 +77,10 @@ export default async (req, res) => {
       return res.status(404).json({ error: 'No se encontraron juegos o el perfil es privado' });
     }
 
-    // Sort by playtime and take top 50
+    // Sort by playtime and take top 
     const games = gamesList
       .sort((a, b) => (b.playtime_forever || 0) - (a.playtime_forever || 0))
-      .slice(0, 50)
+      .slice(0, 41)
       .map(game => ({
         name: game.name,
         hours: Math.round((game.playtime_forever || 0) / 60),
