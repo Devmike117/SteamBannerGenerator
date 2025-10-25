@@ -1,16 +1,151 @@
-# React + Vite
+# Steam Banner Generator 🎮
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Generador de collages personalizados con los juegos más jugados de Steam.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎮 **Descarga automática** de tus 30 juegos más jugados desde Steam
+- 🎨 **Collage dinámico** con tamaños basados en tiempo jugado
+- ℹ️ **Modal interactivo** con información detallada de cada juego
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Uso
 
-## Expanding the ESLint configuration
+1. Ve a la aplicación: [steam-banner-generator.vercel.app](https://steam-banner-generator.vercel.app)
+2. Ingresa tu **Steam ID** (o nombre de usuario de Steam)
+3. Haz clic en "Generar Banner"
+4. Visualiza tu collage y haz clic en cualquier juego para ver detalles
+5. Descarga la imagen como PNG
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### ¿Dónde encontrar tu Steam ID?
+
+- Opción 1: Ve a tu perfil de Steam → URL → `steamcommunity.com/profiles/76561198...`
+- Opción 2: Usa [steamid.io](https://steamid.io) para buscar por nombre de usuario
+- **⚠️ Importante**: Tu perfil debe ser **público** para que funcione
+
+## Stack Técnico
+
+- **Frontend**: React + Vite
+- **Backend**: Node.js + Express (Vercel Serverless)
+- **APIs**: Steam Web API
+- **Estilos**: CSS-in-JS puro
+- **Librerías**: html2canvas, Jimp, axios, lucide-react
+
+## Desarrollo Local
+
+### Requisitos
+- Node.js 18+
+- `STEAM_API_KEY` desde [Steam API](https://steamcommunity.com/dev/apikey)
+
+### Instalación
+
+```bash
+npm install
+```
+
+### Variables de entorno
+
+Crea un archivo `.env` en la raíz:
+```env
+STEAM_API_KEY=TU_STEAM_ID
+```
+
+### Ejecutar en desarrollo
+
+```bash
+npm run dev
+```
+
+Abre [http://localhost:5173](http://localhost:5173)
+
+### Build
+
+```bash
+npm run build
+```
+
+## Estructura del Proyecto
+
+```
+├── src/
+│   ├── App.jsx          # Componente principal
+│   ├── main.jsx
+│   └── index.css
+├── api/                 # Funciones serverless de Vercel
+│   ├── steam.js         # Obtiene juegos de Steam
+│   ├── banner.js        # Genera imagen PNG
+│   └── health.js        # Health check
+├── server/              # Servidor Express (local)
+│   ├── index.js
+│   └── package.json
+├── vercel.json          # Configuración de Vercel
+├── vite.config.js
+└── package.json
+```
+
+## Desplegar en Vercel
+
+1. **Conecta tu GitHub**
+   ```bash
+   git push origin main
+   ```
+
+2. **En Vercel Dashboard**
+   - Import Project → Selecciona tu repo
+   - Framework: Vite
+   - Environment Variables:
+     - `STEAM_API_KEY`: Tu clave de Steam API
+
+3. **Deploy automático** ✨
+   - Cada push a `main` dispara un nuevo deploy
+
+## API Endpoints
+
+### Obtener juegos
+```
+GET /api/steam?steamId=TU_STEAM_ID
+```
+
+**Response:**
+```json
+{
+  "games": [
+    {
+      "name": "Resident Evil 4",
+      "hours": 127,
+      "image": "https://cdn.cloudflare.steamstatic.com/steam/apps/.../header.jpg",
+      "appid": 15640
+    }
+  ]
+}
+```
+
+### Generar banner
+```
+GET /api/banner?steamId=TU_STEAM_ID
+```
+
+Devuelve una imagen PNG del collage.
+
+### Health Check
+```
+GET /api/health
+```
+
+## Notas
+
+- Las imágenes se cachean en el navegador para mejor rendimiento
+- Los datos de Steam se obtienen en tiempo real
+- Soporta vanity URLs (nombres de usuario Steam)
+- Máximo 30 juegos en el collage para mejor visualización
+- Timeout de 10s en llamadas a Steam API
+
+## Licencia
+
+MIT
+
+## Autor
+
+[@Devmike117](https://github.com/Devmike117)
+
+---
