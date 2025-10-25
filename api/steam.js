@@ -46,6 +46,20 @@ export default async (req, res) => {
       }
     }
 
+    // Fetch user profile info
+    const profileResp = await axios.get('https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/', {
+      params: {
+        key: STEAM_API_KEY,
+        steamids: resolvedSteamId
+      },
+      timeout: 8000
+    });
+
+    const playerData = profileResp.data?.response?.players?.[0];
+    if (!playerData) {
+      return res.status(404).json({ error: 'No se encontró el perfil del usuario' });
+    }
+
     // Fetch top 30 games
     const response = await axios.get('https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/', {
       params: {
@@ -74,7 +88,13 @@ export default async (req, res) => {
         appid: game.appid
       }));
 
-    res.json({ games });
+    res.json({
+      profile: {
+        username: playerData.personaname,
+        avatar: playerData.avatarfull
+      },
+      games
+    });
   } catch (error) {
     console.error('Error fetching Steam data:', error.response ? error.response.data : error.message);
     const status = error.response?.status || 500;

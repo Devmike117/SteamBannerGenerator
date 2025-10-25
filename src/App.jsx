@@ -7,11 +7,13 @@ export default function SteamBanner() {
   const [error, setError] = useState('');
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   const handleGenerate = async () => {
     setLoading(true);
     setError('');
     setGames([]);
+    setProfile(null);
 
     if (!steamId.trim()) {
       setError('Por favor ingresa tu Steam ID');
@@ -33,6 +35,7 @@ export default function SteamBanner() {
         return;
       }
 
+      setProfile(data.profile);
       setGames(data.games);
     } catch (err) {
       setError(err.message || 'Error al conectar con el servidor.');
@@ -194,6 +197,22 @@ export default function SteamBanner() {
               id="steam-banner"
               style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', borderRadius: '1rem', padding: '2rem', border: '3px solid rgba(59, 130, 246, 0.4)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}
             >
+              {profile && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '2px solid rgba(59, 130, 246, 0.3)' }}>
+                  <img 
+                    src={profile.avatar} 
+                    alt={profile.username}
+                    style={{ width: '80px', height: '80px', borderRadius: '0.5rem', border: '2px solid rgba(59, 130, 246, 0.5)' }}
+                  />
+                  <div>
+                    <p style={{ color: '#93c5fd', fontSize: '0.875rem', margin: '0 0 0.5rem 0' }}>Usuario de Steam</p>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#60a5fa', margin: 0 }}>
+                      {profile.username}
+                    </h3>
+                  </div>
+                </div>
+              )}
+
               <h2 style={{ fontSize: '2rem', fontWeight: 'bold', color: 'white', marginBottom: '2rem', textAlign: 'center', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
                 Mis Juegos Más Jugados
               </h2>
