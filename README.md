@@ -103,7 +103,7 @@ npm run build
 
 ### Obtener juegos
 ```
-GET /api/steam?steamId=TU_STEAM_ID
+GET /api/steam?steamId=STEAM_ID
 ```
 
 **Response:**
@@ -122,7 +122,7 @@ GET /api/steam?steamId=TU_STEAM_ID
 
 ### Generar banner
 ```
-GET /api/banner?steamId=TU_STEAM_ID
+GET /api/banner?steamId=STEAM_ID
 ```
 
 Devuelve una imagen PNG del collage.
