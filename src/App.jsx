@@ -128,7 +128,7 @@ export default function SteamBanner() {
 
       {/* Contenido principal */}
       {games.length > 0 ? (
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '0 1rem 1rem', gap: '1rem', overflow: 'hidden' }}>
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '0 1rem 1rem', gap: '1rem', overflow: 'auto' }}>
           <div 
             id="steam-banner"
             style={{ 
