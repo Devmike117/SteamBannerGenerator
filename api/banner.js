@@ -62,7 +62,7 @@ export default async (req, res) => {
 
     const games = gamesList
       .sort((a, b) => (b.playtime_forever || 0) - (a.playtime_forever || 0))
-      .slice(0, 100)
+      .slice(0, 50)
       .map((game, idx) => ({
         name: game.name,
         hours: Math.round((game.playtime_forever || 0) / 60),
