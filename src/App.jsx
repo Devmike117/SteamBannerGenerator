@@ -133,8 +133,8 @@ export default function SteamBanner() {
   const gridColumns = 4;
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '1rem' }}>
-      <div style={{ maxWidth: '90rem', margin: '0 auto' }}>
+    <div style={{ height: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '1rem', overflow: 'hidden' }}>
+      <div style={{ maxWidth: '90rem', margin: '0 auto', height: '100%', display: 'flex', flexDirection: 'column' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
             <Gamepad2 style={{ width: '2rem', height: '2rem', color: '#60a5fa', minWidth: '2rem' }} />
@@ -180,10 +180,10 @@ export default function SteamBanner() {
         </div>
 
         {games.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1, minHeight: 0, overflow: 'auto' }}>
             <div 
               id="steam-banner"
-              style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', borderRadius: '1rem', padding: 'clamp(1rem, 4vw, 2rem)', border: '3px solid rgba(59, 130, 246, 0.4)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}
+              style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', borderRadius: '1rem', padding: 'clamp(1rem, 4vw, 2rem)', border: '3px solid rgba(59, 130, 246, 0.4)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}
             >
               {profile && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(0.75rem, 3vw, 1.5rem)', marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '2px solid rgba(59, 130, 246, 0.3)', flexWrap: 'wrap' }}>
@@ -201,7 +201,7 @@ export default function SteamBanner() {
                 </div>
               )}
 
-              <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: 'bold', color: 'white', marginBottom: '2rem', textAlign: 'center', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+              <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: 'bold', color: 'white', marginBottom: '1rem', textAlign: 'center', textShadow: '0 2px 10px rgba(0,0,0,0.5)', flexShrink: 0 }}>
                 Mis Juegos Más Jugados
               </h2>
               
@@ -210,7 +210,11 @@ export default function SteamBanner() {
                 gridTemplateColumns: `repeat(${Math.max(2, Math.min(gridColumns, typeof window !== 'undefined' && window.innerWidth < 768 ? 2 : gridColumns))}, 1fr)`,
                 gap: 'clamp(0.5rem, 2vw, 0.75rem)',
                 gridAutoRows: 'clamp(80px, 20vw, 120px)',
-                gridAutoFlow: 'dense'
+                gridAutoFlow: 'dense',
+                flex: 1,
+                minHeight: 0,
+                overflow: 'auto',
+                alignContent: 'start'
               }}>
                 {layoutGames.map((game) => (
                   <div
@@ -301,7 +305,8 @@ export default function SteamBanner() {
                 gap: '0.5rem', 
                 transition: 'all 0.2s',
                 boxShadow: '0 4px 12px rgba(22, 163, 74, 0.4)',
-                fontSize: 'clamp(0.875rem, 2vw, 1rem)'
+                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+                flexShrink: 0
               }}
               onMouseEnter={(e) => {
                 e.target.style.transform = 'translateY(-2px)';
