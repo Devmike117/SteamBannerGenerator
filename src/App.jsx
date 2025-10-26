@@ -304,11 +304,9 @@ export default function SteamBanner() {
               }}
               onMouseEnter={(e) => {
                 e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 20px ';
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px';
               }}
             >
               <Download style={{ width: '1.25rem', height: '1.25rem', minWidth: '1.25rem' }} />
