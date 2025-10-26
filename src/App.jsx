@@ -108,7 +108,7 @@ export default function SteamBanner() {
     }
   };
 
-  // Calcular layout proporcional basado en horas jugadas
+  {/* Calcular layout proporcional basado en horas jugadas */}
   const getGameLayout = () => {
     if (games.length === 0) return [];
 
@@ -118,68 +118,58 @@ export default function SteamBanner() {
     return games.map((game, index) => {
       const normalized = (game.hours - minHours) / (maxHours - minHours || 1);
 
-      // Escala progresiva más marcada
-      const scale = 0.3 + normalized * 1; 
-
-      // Definimos tamaño real del bloque
-      const width = `${scale * 100}%`;
-      const height = `${scale * 100}%`;
-
-      // Span para grid 
       let gridSpan;
       if (normalized > 0.8) gridSpan = 3;
       else if (normalized > 0.6) gridSpan = 2;
-      else if (normalized > 0.4) gridSpan = 2;
+      else if (normalized > 0.3) gridSpan = 2;
       else gridSpan = 1;
 
-      return {
-        ...game,
-        gridSpan,
-        width,
-        height,
-        scale,
-        index
+      // Escala visual
+      const scale = 0.8 + normalized * 0.6; 
+
+      return { 
+        ...game, 
+        gridSpan, 
+        scale, 
+        index 
       };
     });
   };
 
-  // Columnas dinámicas
+  {/* Calcular número dinámico de columnas */}
   const calculateColumns = () => {
     const totalSpans = layoutGames.reduce((sum, g) => sum + g.gridSpan, 0);
-    const avgRowItems = Math.ceil(Math.sqrt(totalSpans / 1.2));
+    const avgRowItems = Math.ceil(Math.sqrt(totalSpans / 1.4));
     return Math.max(3, Math.min(6, avgRowItems));
   };
 
   const layoutGames = getGameLayout();
   const gridColumns = calculateColumns();
+
   <div
-    className="grid justify-center items-start gap-2"
-    style={{
-      gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))`,
-      gridAutoRows: '1fr'
-    }}
-  >
-    {layoutGames.map((g) => (
-      <div
-        key={g.appid}
-        className="relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105"
-        style={{
-          gridColumn: `span ${g.gridSpan}`,
-          width: g.width,
-          height: g.height,
-        }}
-      >
-        <img
-          src={g.image}
-          alt={g.name}
-          className="w-full h-full object-cover rounded-xl shadow-lg"
-        />
-        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs sm:text-sm p-1 sm:p-2 truncate">
-          {g.name} — {g.hours}h
-        </div>
+  className="grid gap-2"
+  style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}
+>
+  {layoutGames.map((g) => (
+    <div
+      key={g.appid}
+      className="relative overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105"
+      style={{
+        gridColumn: `span ${g.gridSpan}`,
+        transform: `scale(${g.scale})`,
+      }}
+    >
+      <img
+        src={g.image}
+        alt={g.name}
+        className="w-full h-full object-cover rounded-xl shadow-lg"
+      />
+      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs sm:text-sm p-1 sm:p-2 truncate">
+        {g.name} — {g.hours}h
       </div>
-    ))}
-  </div>
+    </div>
+  ))}
+</div>
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '1rem' }}>
