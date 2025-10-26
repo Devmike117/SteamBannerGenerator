@@ -65,50 +65,48 @@ export default async (req, res) => {
         index: idx
       }));
 
-    // Create banner: width 1400, height 600
+    // Create banner: width 1400, height 600 (grid layout)
     const width = 1400;
     const height = 600;
-    const banner = new Jimp(width, height, '#0f172a');
+    const banner = new Jimp({ width, height, color: 0x0f172aff });
 
     // Load fonts
     const fontTitle = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
     const fontSmall = await Jimp.loadFont(Jimp.FONT_SANS_16_WHITE);
 
-    // Title
-    const title = 'Mis Juegos Más Jugados';
-    banner.print(fontTitle, 0, 20, { text: title, alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER }, width);
+    // Grid layout: 5 columns
+    const columns = 5;
+    const rows = Math.ceil(games.length / columns);
+    const gap = 10;
+    const tileWidth = Math.floor((width - gap * (columns + 1)) / columns);
+    const tileHeight = Math.floor((height - gap * (rows + 1)) / rows);
 
-    // Compute tile sizes
-    const tiles = games.length;
-    const gap = 20;
-    const tileWidth = Math.floor((width - gap * (tiles + 1)) / tiles);
-    const tileHeight = height - 120;
-    const y = 80;
-
-    // For each game, load image and composite
+    // For each game, load image and composite in grid
     for (let i = 0; i < games.length; i++) {
       const g = games[i];
-      const x = gap + i * (tileWidth + gap);
+      const col = i % columns;
+      const row = Math.floor(i / columns);
+      const x = gap + col * (tileWidth + gap);
+      const y = gap + row * (tileHeight + gap);
+
       try {
         const img = await Jimp.read(g.image);
         img.cover(tileWidth, tileHeight);
         banner.composite(img, x, y);
 
         // overlay gradient for text readability
-        const overlay = new Jimp(tileWidth, 80, '#000000');
-        overlay.opacity(0.5);
-        banner.composite(overlay, x, y + tileHeight - 80);
+        const overlay = new Jimp({ width: tileWidth, height: 50, color: 0x00000080 });
+        banner.composite(overlay, x, y + tileHeight - 50);
 
-        // print game name and hours
-        const nameText = g.name.length > 40 ? g.name.substring(0, 37) + '...' : g.name;
-        banner.print(fontSmall, x + 10, y + tileHeight - 70, nameText, tileWidth - 20);
-        banner.print(fontSmall, x + 10, y + tileHeight - 36, `${g.hours} hrs`);
+        // print game name and hours (smaller text for grid)
+        const nameText = g.name.length > 25 ? g.name.substring(0, 22) + '...' : g.name;
+        banner.print(fontSmall, x + 5, y + tileHeight - 40, nameText, tileWidth - 10);
+        banner.print(fontSmall, x + 5, y + tileHeight - 20, `${g.hours}h`);
       } catch (imgErr) {
         console.error('Error loading game image:', imgErr.message || imgErr);
         // draw a placeholder box
-        const placeholder = new Jimp(tileWidth, tileHeight, '#1f2937');
+        const placeholder = new Jimp({ width: tileWidth, height: tileHeight, color: 0x1f293780 });
         banner.composite(placeholder, x, y);
-        banner.print(fontSmall, x + 10, y + 10, g.name, tileWidth - 20);
       }
     }
 
