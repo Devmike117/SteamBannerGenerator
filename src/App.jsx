@@ -134,7 +134,7 @@ export default function SteamBanner() {
     {layoutGames.map((g) => (
       <div
         key={g.appid}
-        className="relative shrink-0 rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105"
+        className="relative flex-shrink-0 rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105"
         style={{
           width: `${g.widthPercent}%`,
           height: '200px', 
@@ -151,6 +151,8 @@ export default function SteamBanner() {
       </div>
     ))}
   </div>
+
+
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '1rem' }}>
