@@ -150,7 +150,7 @@ export default function SteamBanner() {
               gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
               gap: '8px',
               padding: '1.5rem',
-              overflow: 'hidden',
+              overflow: 'auto',
               backgroundColor: '#1b2838',
               alignContent: 'start'
             }}>
