@@ -176,8 +176,8 @@ export default function SteamBanner() {
             {/* Mosaico de juegos */}
             <div style={{ 
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
-              gridAutoRows: '100px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gridAutoRows: '85px',
               gridAutoFlow: 'dense',
               gap: '8px',
               width: '100%'
@@ -189,13 +189,13 @@ export default function SteamBanner() {
                 
                 if (game.hours >= 100) {
                   colSpan = 3;
-                  rowSpan = 3;
+                  rowSpan = 2;
                 } else if (game.hours >= 80) {
                   colSpan = 2;
                   rowSpan = 2;
                 } else if (game.hours >= 60) {
                   colSpan = 2;
-                  rowSpan = 2;
+                  rowSpan = 1;
                 } else if (game.hours >= 40) {
                   colSpan = 2;
                   rowSpan = 1;
