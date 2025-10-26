@@ -147,84 +147,126 @@ export default function SteamBanner() {
               flex: 1,
               minHeight: 0,
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
               gap: '2px',
               padding: '2px',
               overflow: 'hidden',
               backgroundColor: '#0a0a0a',
               alignContent: 'start'
             }}>
-              {games.map((game, index) => (
-                <div
-                  key={index}
-                  onClick={() => setSelectedGame(game)}
-                  style={{ 
-                    position: 'relative',
-                    aspectRatio: '16/9',
-                    cursor: 'pointer',
-                    overflow: 'hidden',
-                    transition: 'all 0.2s ease',
-                    backgroundColor: '#1a1a1a'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                    e.currentTarget.style.zIndex = '10';
-                    e.currentTarget.style.filter = 'brightness(1.2)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.zIndex = '1';
-                    e.currentTarget.style.filter = 'brightness(1)';
-                  }}
-                >
-                  <img
-                    src={game.image}
-                    alt={game.name}
+              {profile && (
+                <div style={{
+                  gridColumn: 'span 2',
+                  gridRow: 'span 2',
+                  backgroundColor: '#16213e',
+                  borderRadius: '0.5rem',
+                  padding: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  border: '2px solid rgba(59, 130, 246, 0.5)'
+                }}>
+                  <img 
+                    src={profile.avatar} 
+                    alt={profile.username}
                     style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'cover',
-                      display: 'block'
+                      width: '60px', 
+                      height: '60px', 
+                      borderRadius: '0.5rem', 
+                      border: '2px solid rgba(59, 130, 246, 0.5)'
                     }}
                   />
-                  <div style={{ 
-                    position: 'absolute', 
-                    inset: 0, 
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    padding: '0.5rem',
-                    opacity: 0,
-                    transition: 'opacity 0.2s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}
-                  >
-                    <p style={{ 
-                      color: 'white',
-                      fontSize: '0.7rem',
-                      fontWeight: '600',
-                      margin: '0 0 0.25rem 0',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      textShadow: '0 1px 3px rgba(0,0,0,0.8)'
-                    }}>
-                      {game.name}
-                    </p>
-                    <p style={{ 
-                      color: '#60a5fa',
-                      fontSize: '0.65rem',
-                      fontWeight: '700',
-                      margin: 0,
-                      textShadow: '0 1px 3px rgba(0,0,0,0.8)'
-                    }}>
-                      {game.hours.toLocaleString()} hrs
-                    </p>
+                  <div style={{ textAlign: 'center' }}>
+                    <p style={{ color: '#93c5fd', fontSize: '0.65rem', margin: '0 0 0.25rem 0' }}>Usuario de Steam</p>
+                    <h3 style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#60a5fa', margin: 0 }}>
+                      {profile.username}
+                    </h3>
                   </div>
                 </div>
-              ))}
+              )}
+              {games.map((game, index) => {
+                // Calcular span basado en horas jugadas
+                let span = 1;
+                if (game.hours >= 200) span = 3;
+                else if (game.hours >= 100) span = 2;
+                else if (game.hours >= 50) span = 2;
+                
+                return (
+                  <div
+                    key={index}
+                    onClick={() => setSelectedGame(game)}
+                    style={{ 
+                      gridColumn: `span ${span}`,
+                      gridRow: `span ${span}`,
+                      position: 'relative',
+                      cursor: 'pointer',
+                      overflow: 'hidden',
+                      transition: 'all 0.2s ease',
+                      backgroundColor: '#1a1a1a',
+                      aspectRatio: '1/1'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                      e.currentTarget.style.zIndex = '10';
+                      e.currentTarget.style.filter = 'brightness(1.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.zIndex = '1';
+                      e.currentTarget.style.filter = 'brightness(1)';
+                    }}
+                  >
+                    <img
+                      src={game.image}
+                      alt={game.name}
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover',
+                        display: 'block'
+                      }}
+                    />
+                    <div style={{ 
+                      position: 'absolute', 
+                      inset: 0, 
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-end',
+                      padding: span >= 2 ? '0.75rem' : '0.5rem',
+                      opacity: 0,
+                      transition: 'opacity 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}
+                    >
+                      <p style={{ 
+                        color: 'white',
+                        fontSize: span >= 2 ? '0.85rem' : '0.7rem',
+                        fontWeight: '600',
+                        margin: '0 0 0.25rem 0',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textShadow: '0 1px 3px rgba(0,0,0,0.8)'
+                      }}>
+                        {game.name}
+                      </p>
+                      <p style={{ 
+                        color: '#60a5fa',
+                        fontSize: span >= 2 ? '0.75rem' : '0.65rem',
+                        fontWeight: '700',
+                        margin: 0,
+                        textShadow: '0 1px 3px rgba(0,0,0,0.8)'
+                      }}>
+                        {game.hours.toLocaleString()} hrs
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
