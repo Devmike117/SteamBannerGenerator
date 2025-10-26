@@ -176,15 +176,31 @@ export default function SteamBanner() {
             {/* Mosaico de juegos */}
             <div style={{ 
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-              gridAutoRows: 'minmax(85px, auto)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
               gap: '8px',
               width: '100%'
             }}>
               {games.map((game, index) => {
-                // Calcular span basado en horas jugadas
+                // Calcular span y tamaño basado en posición (decreciente gradual)
                 let span = 1;
-                if (game.hours >= 100) span = 2;
+                let height = '85px';
+                
+                if (index === 0) {
+                  span = 2;
+                  height = '180px';
+                } else if (index === 1) {
+                  span = 2;
+                  height = '180px';
+                } else if (index <= 4) {
+                  span = 1;
+                  height = '140px';
+                } else if (index <= 10) {
+                  span = 1;
+                  height = '110px';
+                } else {
+                  span = 1;
+                  height = '90px';
+                }
                 
                 return (
                   <div
@@ -197,8 +213,8 @@ export default function SteamBanner() {
                       overflow: 'hidden',
                       transition: 'all 0.2s ease',
                       backgroundColor: '#000',
-                      aspectRatio: '16/9',
-                      borderRadius: '4px'
+                      borderRadius: '4px',
+                      height: height
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'scale(1.05)';
