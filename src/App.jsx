@@ -128,31 +128,22 @@ export default function SteamBanner() {
 
       {/* Contenido principal */}
       {games.length > 0 ? (
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '0 1rem 1rem', gap: '1rem' }}>
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '0 1rem 1rem', gap: '1rem', overflow: 'auto' }}>
           <div 
             id="steam-banner"
             style={{ 
-              flex: 1,
-              minHeight: 0,
-              background: '#0a0a0a',
+              background: '#1b2838',
               borderRadius: '0.5rem',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              border: '2px solid rgba(59, 130, 246, 0.3)'
+              border: '2px solid rgba(59, 130, 246, 0.3)',
+              padding: '1.5rem'
             }}
           >
-            {/* Mosaico de juegos - ocupa todo el espacio */}
+            {/* Mosaico de juegos */}
             <div style={{ 
-              flex: 1,
-              minHeight: 0,
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
               gap: '8px',
-              padding: '1.5rem',
-              overflow: 'auto',
-              backgroundColor: '#1b2838',
-              alignContent: 'start'
+              width: '100%'
             }}>
               {profile && (
                 <div style={{
