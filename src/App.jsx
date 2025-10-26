@@ -109,57 +109,40 @@ export default function SteamBanner() {
   };
 
   {/* Calcular layout proporcional basado en horas jugadas */}
-  const getGameLayout = () => {
+    const getGameLayout = () => {
     if (games.length === 0) return [];
 
-    return games.map((game, index) => {
+    return games.map((game) => {
       let scale;
 
       if (game.hours >= 100) scale = 1.0;
       else if (game.hours >= 50) scale = 0.8;
       else if (game.hours >= 30) scale = 0.6;
       else if (game.hours >= 20) scale = 0.5;
-      else if (game.hours >= 10) scale = 0.4;
-      else scale = 0.3;
+      else scale = 0.4;
 
-      // gridSpan 
-      let gridSpan = 1;
-      if (game.hours >= 100) gridSpan = 3;
-      else if (game.hours >= 50) gridSpan = 2;
-      else gridSpan = 1;
-
-      return {
-        ...game,
-        scale,
-        gridSpan,
-        index,
-      };
+      return { ...game, scale };
     });
   };
 
   const layoutGames = getGameLayout();
 
-  {/* Calcular número dinámico de columnas */}
-  const calculateColumns = () => {
-    const totalSpans = layoutGames.reduce((sum, g) => sum + g.gridSpan, 0);
-    const avgRowItems = Math.ceil(Math.sqrt(totalSpans / 1.4));
-    return Math.max(3, Math.min(6, avgRowItems));
-  };
-
-  const gridColumns = calculateColumns();
-
   <div
-    className="grid gap-2"
-    style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}
+    className="grid gap-2 w-full"
+    style={{
+      gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+      justifyItems: 'center',
+    }}
   >
     {layoutGames.map((g) => (
       <div
         key={g.appid}
         className="relative overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105"
         style={{
-          gridColumn: `span ${g.gridSpan}`,
           transform: `scale(${g.scale})`,
           transformOrigin: 'center center',
+          width: '100%',
+          aspectRatio: '16/9', // mantiene proporción como tus imágenes
         }}
       >
         <img
@@ -173,7 +156,6 @@ export default function SteamBanner() {
       </div>
     ))}
   </div>
-
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '1rem' }}>
