@@ -176,30 +176,31 @@ export default function SteamBanner() {
             {/* Mosaico de juegos */}
             <div style={{ 
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+              gridTemplateColumns: 'repeat(6, 1fr)',
+              gridAutoFlow: 'dense',
               gap: '8px',
               width: '100%'
             }}>
               {games.map((game, index) => {
-                // Calcular span y tamaño basado en posición (decreciente gradual)
-                let span = 1;
-                let height = '85px';
+                // Calcular span basado en posición (decreciente gradual)
+                let colSpan = 1;
+                let rowSpan = 1;
                 
                 if (index === 0) {
-                  span = 2;
-                  height = '180px';
+                  colSpan = 2;
+                  rowSpan = 2;
                 } else if (index === 1) {
-                  span = 2;
-                  height = '180px';
+                  colSpan = 2;
+                  rowSpan = 2;
                 } else if (index <= 4) {
-                  span = 1;
-                  height = '140px';
+                  colSpan = 1;
+                  rowSpan = 2;
                 } else if (index <= 10) {
-                  span = 1;
-                  height = '110px';
+                  colSpan = 1;
+                  rowSpan = 1;
                 } else {
-                  span = 1;
-                  height = '90px';
+                  colSpan = 1;
+                  rowSpan = 1;
                 }
                 
                 return (
@@ -207,14 +208,15 @@ export default function SteamBanner() {
                     key={index}
                     onClick={() => setSelectedGame(game)}
                     style={{ 
-                      gridColumn: `span ${span}`,
+                      gridColumn: `span ${colSpan}`,
+                      gridRow: `span ${rowSpan}`,
                       position: 'relative',
                       cursor: 'pointer',
                       overflow: 'hidden',
                       transition: 'all 0.2s ease',
                       backgroundColor: '#000',
                       borderRadius: '4px',
-                      height: height
+                      minHeight: '100px'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'scale(1.05)';
@@ -250,7 +252,7 @@ export default function SteamBanner() {
                     }}>
                       <p style={{ 
                         color: '#66c0f4',
-                        fontSize: span >= 2 ? '0.9rem' : '0.75rem',
+                        fontSize: colSpan >= 2 ? '0.9rem' : '0.75rem',
                         fontWeight: '600',
                         margin: 0,
                         textShadow: '0 1px 3px rgba(0,0,0,0.8)'
