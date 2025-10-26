@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Gamepad2, Download, AlertCircle, Loader2 } from 'lucide-react';
 
-// v2.0 - Estilo mosaico completo como Steam
+// v2.0 - Estilo mosaico
 export default function SteamBanner() {
   const [steamId, setSteamId] = useState('');
   const [loading, setLoading] = useState(false);
@@ -176,26 +176,33 @@ export default function SteamBanner() {
             {/* Mosaico de juegos */}
             <div style={{ 
               display: 'grid',
-              gridTemplateColumns: 'repeat(6, 1fr)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+              gridAutoRows: '100px',
               gridAutoFlow: 'dense',
               gap: '8px',
               width: '100%'
             }}>
               {games.map((game, index) => {
-                // Calcular span basado en posición (decreciente gradual)
+                // Calcular span basado en horas jugadas (decreciente gradual)
                 let colSpan = 1;
                 let rowSpan = 1;
                 
-                if (index === 0) {
+                if (game.hours >= 100) {
+                  colSpan = 3;
+                  rowSpan = 3;
+                } else if (game.hours >= 80) {
                   colSpan = 2;
                   rowSpan = 2;
-                } else if (index === 1) {
+                } else if (game.hours >= 60) {
                   colSpan = 2;
                   rowSpan = 2;
-                } else if (index <= 4) {
+                } else if (game.hours >= 40) {
+                  colSpan = 2;
+                  rowSpan = 1;
+                } else if (game.hours >= 20) {
                   colSpan = 1;
-                  rowSpan = 2;
-                } else if (index <= 10) {
+                  rowSpan = 1;
+                } else if (game.hours >= 10) {
                   colSpan = 1;
                   rowSpan = 1;
                 } else {
@@ -215,8 +222,7 @@ export default function SteamBanner() {
                       overflow: 'hidden',
                       transition: 'all 0.2s ease',
                       backgroundColor: '#000',
-                      borderRadius: '4px',
-                      minHeight: '100px'
+                      borderRadius: '4px'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'scale(1.05)';
@@ -245,14 +251,14 @@ export default function SteamBanner() {
                       left: 0,
                       right: 0,
                       background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)',
-                      padding: '0.75rem',
+                      padding: colSpan >= 2 ? '1rem' : '0.5rem',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'flex-end'
                     }}>
                       <p style={{ 
                         color: '#66c0f4',
-                        fontSize: colSpan >= 2 ? '0.9rem' : '0.75rem',
+                        fontSize: colSpan >= 3 ? '1.1rem' : colSpan >= 2 ? '0.9rem' : '0.7rem',
                         fontWeight: '600',
                         margin: 0,
                         textShadow: '0 1px 3px rgba(0,0,0,0.8)'
