@@ -147,17 +147,16 @@ export default function SteamBanner() {
               flex: 1,
               minHeight: 0,
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
-              gap: '2px',
-              padding: '2px',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+              gap: '8px',
+              padding: '1.5rem',
               overflow: 'hidden',
-              backgroundColor: '#0a0a0a',
+              backgroundColor: '#1b2838',
               alignContent: 'start'
             }}>
               {profile && (
                 <div style={{
-                  gridColumn: 'span 2',
-                  gridRow: 'span 2',
+                  gridColumn: 'span 1',
                   backgroundColor: '#16213e',
                   borderRadius: '0.5rem',
                   padding: '1rem',
@@ -166,14 +165,15 @@ export default function SteamBanner() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  border: '2px solid rgba(59, 130, 246, 0.5)'
+                  border: '2px solid rgba(59, 130, 246, 0.5)',
+                  aspectRatio: '16/9'
                 }}>
                   <img 
                     src={profile.avatar} 
                     alt={profile.username}
                     style={{ 
-                      width: '60px', 
-                      height: '60px', 
+                      width: '50px', 
+                      height: '50px', 
                       borderRadius: '0.5rem', 
                       border: '2px solid rgba(59, 130, 246, 0.5)'
                     }}
@@ -189,9 +189,7 @@ export default function SteamBanner() {
               {games.map((game, index) => {
                 // Calcular span basado en horas jugadas
                 let span = 1;
-                if (game.hours >= 200) span = 3;
-                else if (game.hours >= 100) span = 2;
-                else if (game.hours >= 50) span = 2;
+                if (game.hours >= 100) span = 2;
                 
                 return (
                   <div
@@ -199,23 +197,23 @@ export default function SteamBanner() {
                     onClick={() => setSelectedGame(game)}
                     style={{ 
                       gridColumn: `span ${span}`,
-                      gridRow: `span ${span}`,
                       position: 'relative',
                       cursor: 'pointer',
                       overflow: 'hidden',
                       transition: 'all 0.2s ease',
-                      backgroundColor: '#1a1a1a',
-                      aspectRatio: '1/1'
+                      backgroundColor: '#000',
+                      aspectRatio: '16/9',
+                      borderRadius: '4px'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'scale(1.05)';
                       e.currentTarget.style.zIndex = '10';
-                      e.currentTarget.style.filter = 'brightness(1.2)';
+                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.8)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'scale(1)';
                       e.currentTarget.style.zIndex = '1';
-                      e.currentTarget.style.filter = 'brightness(1)';
+                      e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
                     <img
@@ -230,38 +228,23 @@ export default function SteamBanner() {
                     />
                     <div style={{ 
                       position: 'absolute', 
-                      inset: 0, 
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%)',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)',
+                      padding: '0.75rem',
                       display: 'flex',
                       flexDirection: 'column',
-                      justifyContent: 'flex-end',
-                      padding: span >= 2 ? '0.75rem' : '0.5rem',
-                      opacity: 0,
-                      transition: 'opacity 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                    onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}
-                    >
+                      justifyContent: 'flex-end'
+                    }}>
                       <p style={{ 
-                        color: 'white',
-                        fontSize: span >= 2 ? '0.85rem' : '0.7rem',
+                        color: '#66c0f4',
+                        fontSize: span >= 2 ? '0.9rem' : '0.75rem',
                         fontWeight: '600',
-                        margin: '0 0 0.25rem 0',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textShadow: '0 1px 3px rgba(0,0,0,0.8)'
-                      }}>
-                        {game.name}
-                      </p>
-                      <p style={{ 
-                        color: '#60a5fa',
-                        fontSize: span >= 2 ? '0.75rem' : '0.65rem',
-                        fontWeight: '700',
                         margin: 0,
                         textShadow: '0 1px 3px rgba(0,0,0,0.8)'
                       }}>
-                        {game.hours.toLocaleString()} hrs
+                        {game.hours} hrs
                       </p>
                     </div>
                   </div>
