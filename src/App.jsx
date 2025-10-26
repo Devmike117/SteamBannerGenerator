@@ -118,14 +118,16 @@ export default function SteamBanner() {
     return games.map((game, index) => {
       const normalized = (game.hours - minHours) / (maxHours - minHours || 1);
 
+      // Asignar gridSpan proporcional
       let gridSpan;
       if (normalized > 0.8) gridSpan = 3;
       else if (normalized > 0.6) gridSpan = 2;
       else if (normalized > 0.3) gridSpan = 2;
       else gridSpan = 1;
 
-      // Escala visual
-      const scale = 0.8 + normalized * 0.6; 
+      // 🔥 Escala más pronunciada: los menos jugados se reducen más
+      // Valor entre 0.4 y 1.0
+      const scale = 0.4 + normalized * 0.6;
 
       return { 
         ...game, 
@@ -147,29 +149,31 @@ export default function SteamBanner() {
   const gridColumns = calculateColumns();
 
   <div
-  className="grid gap-2"
-  style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}
->
-  {layoutGames.map((g) => (
-    <div
-      key={g.appid}
-      className="relative overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105"
-      style={{
-        gridColumn: `span ${g.gridSpan}`,
-        transform: `scale(${g.scale})`,
-      }}
-    >
-      <img
-        src={g.image}
-        alt={g.name}
-        className="w-full h-full object-cover rounded-xl shadow-lg"
-      />
-      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs sm:text-sm p-1 sm:p-2 truncate">
-        {g.name} — {g.hours}h
+    className="grid gap-2"
+    style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}
+  >
+    {layoutGames.map((g) => (
+      <div
+        key={g.appid}
+        className="relative overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105"
+        style={{
+          gridColumn: `span ${g.gridSpan}`,
+          transform: `scale(${g.scale})`,
+          transformOrigin: 'center center',
+        }}
+      >
+        <img
+          src={g.image}
+          alt={g.name}
+          className="w-full h-full object-cover rounded-xl shadow-lg"
+        />
+        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs sm:text-sm p-1 sm:p-2 truncate">
+          {g.name} — {g.hours}h
+        </div>
       </div>
-    </div>
-  ))}
-</div>
+    ))}
+  </div>
+
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '1rem' }}>
