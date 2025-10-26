@@ -112,32 +112,54 @@ export default function SteamBanner() {
   const getGameLayout = () => {
     if (games.length === 0) return [];
 
-    const maxHours = Math.max(...games.map(g => g.hours));
-    const minHours = Math.min(...games.map(g => g.hours));
+    return games.map((game, index) => {
+      let scale;
 
-    return games.map((game) => {
-      const normalized = (game.hours - minHours) / (maxHours - minHours || 1);
+      if (game.hours >= 100) scale = 1.0;
+      else if (game.hours >= 50) scale = 0.8;
+      else if (game.hours >= 30) scale = 0.6;
+      else if (game.hours >= 20) scale = 0.5;
+      else if (game.hours >= 10) scale = 0.4;
+      else scale = 0.3;
 
-      // Tamaño entre 100% y 40% según horas jugadas
-      const widthPercent = 40 + normalized * 60; 
+      // gridSpan 
+      let gridSpan = 1;
+      if (game.hours >= 100) gridSpan = 3;
+      else if (game.hours >= 50) gridSpan = 2;
+      else gridSpan = 1;
 
       return {
         ...game,
-        widthPercent,
+        scale,
+        gridSpan,
+        index,
       };
     });
   };
 
   const layoutGames = getGameLayout();
 
-  <div className="flex gap-2 w-full overflow-x-auto py-4">
+  {/* Calcular número dinámico de columnas */}
+  const calculateColumns = () => {
+    const totalSpans = layoutGames.reduce((sum, g) => sum + g.gridSpan, 0);
+    const avgRowItems = Math.ceil(Math.sqrt(totalSpans / 1.4));
+    return Math.max(3, Math.min(6, avgRowItems));
+  };
+
+  const gridColumns = calculateColumns();
+
+  <div
+    className="grid gap-2"
+    style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}
+  >
     {layoutGames.map((g) => (
       <div
         key={g.appid}
-        className="relative flex-shrink-0 rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105"
+        className="relative overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105"
         style={{
-          width: `${g.widthPercent}%`,
-          height: '200px', 
+          gridColumn: `span ${g.gridSpan}`,
+          transform: `scale(${g.scale})`,
+          transformOrigin: 'center center',
         }}
       >
         <img
@@ -151,7 +173,6 @@ export default function SteamBanner() {
       </div>
     ))}
   </div>
-
 
 
   return (
