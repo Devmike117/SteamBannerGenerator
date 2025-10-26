@@ -26,15 +26,20 @@ export default async (req, res) => {
     // Resolve vanity URL if necessary
     let resolvedSteamId = steamId.trim();
     if (!/^\d+$/.test(resolvedSteamId)) {
-      const vanityResp = await axios.get('https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/', {
-        params: { key: STEAM_API_KEY, vanityurl: resolvedSteamId },
-        timeout: 8000
-      });
-      const vResp = vanityResp.data?.response;
-      if (vResp && vResp.success === 1 && vResp.steamid) {
-        resolvedSteamId = vResp.steamid;
-      } else {
-        return res.status(404).json({ error: 'No se encontró el usuario de Steam con ese nombre (vanity URL)' });
+      try {
+        const vanityResp = await axios.get('https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/', {
+          params: { key: STEAM_API_KEY, vanityurl: resolvedSteamId },
+          timeout: 8000
+        });
+        const vResp = vanityResp.data?.response;
+        if (vResp && vResp.success === 1 && vResp.steamid) {
+          resolvedSteamId = vResp.steamid;
+        } else {
+          return res.status(404).json({ error: 'No se encontró el usuario de Steam con ese nombre (vanity URL)' });
+        }
+      } catch (vanityErr) {
+        console.error('Error resolving vanity URL:', vanityErr.message);
+        return res.status(404).json({ error: 'No se encontró el usuario de Steam' });
       }
     }
 
