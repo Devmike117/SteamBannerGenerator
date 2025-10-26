@@ -112,6 +112,11 @@ export default async (req, res) => {
         // draw a placeholder box
         const placeholder = new Jimp({ width: tileWidth, height: tileHeight, color: 0x1f293780 });
         banner.composite(placeholder, x, y);
+        
+        // Add game name and hours to the placeholder
+        const nameText = g.name.length > 25 ? g.name.substring(0, 22) + '...' : g.name;
+        banner.print(fontSmall, x + 5, y + 10, nameText, tileWidth - 10);
+        banner.print(fontSmall, x + 5, y + tileHeight - 20, `${g.hours}h`);
       }
     }
 
