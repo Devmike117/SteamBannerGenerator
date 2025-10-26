@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Gamepad2, Download, AlertCircle, Loader2 } from 'lucide-react';
 
-// v1.1 - Cleaned up banner download
+// v1.2 - Fixed code structure and logic
 export default function SteamBanner() {
   const [steamId, setSteamId] = useState('');
   const [loading, setLoading] = useState(false);
@@ -108,54 +108,29 @@ export default function SteamBanner() {
     }
   };
 
-  {/* Calcular layout proporcional basado en horas jugadas */}
-    const getGameLayout = () => {
+  // Calcular layout proporcional basado en horas jugadas
+  const getGameLayout = () => {
     if (games.length === 0) return [];
 
-    return games.map((game) => {
-      let scale;
-
-      if (game.hours >= 100) scale = 1.0;
-      else if (game.hours >= 50) scale = 0.8;
-      else if (game.hours >= 30) scale = 0.6;
-      else if (game.hours >= 20) scale = 0.5;
-      else scale = 0.4;
-
-      return { ...game, scale };
+    const sortedGames = [...games].sort((a, b) => b.hours - a.hours);
+    
+    return sortedGames.map((game, index) => {
+      let gridSpan = 1;
+      
+      if (index === 0 && game.hours >= 100) gridSpan = 2;
+      else if (game.hours >= 50) gridSpan = 2;
+      else if (game.hours >= 30) gridSpan = 1;
+      
+      return { 
+        ...game, 
+        gridSpan,
+        index 
+      };
     });
   };
 
   const layoutGames = getGameLayout();
-
-  <div
-    className="grid gap-2 w-full"
-    style={{
-      gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-      justifyItems: 'center',
-    }}
-  >
-    {layoutGames.map((g) => (
-      <div
-        key={g.appid}
-        className="relative overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105"
-        style={{
-          transform: `scale(${g.scale})`,
-          transformOrigin: 'center center',
-          width: '100%',
-          aspectRatio: '16/9', // mantiene proporción como tus imágenes
-        }}
-      >
-        <img
-          src={g.image}
-          alt={g.name}
-          className="w-full h-full object-cover rounded-xl shadow-lg"
-        />
-        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs sm:text-sm p-1 sm:p-2 truncate">
-          {g.name} — {g.hours}h
-        </div>
-      </div>
-    ))}
-  </div>
+  const gridColumns = 4;
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '1rem' }}>
@@ -232,7 +207,7 @@ export default function SteamBanner() {
               
               <div style={{ 
                 display: 'grid',
-                gridTemplateColumns: `repeat(${Math.max(2, Math.min(gridColumns, window.innerWidth < 768 ? 2 : gridColumns))}, 1fr)`,
+                gridTemplateColumns: `repeat(${Math.max(2, Math.min(gridColumns, typeof window !== 'undefined' && window.innerWidth < 768 ? 2 : gridColumns))}, 1fr)`,
                 gap: 'clamp(0.5rem, 2vw, 0.75rem)',
                 gridAutoRows: 'clamp(80px, 20vw, 120px)',
                 gridAutoFlow: 'dense'
@@ -283,6 +258,18 @@ export default function SteamBanner() {
                       padding: '0.75rem' 
                     }}>
                       <p style={{ 
+                        color: 'white', 
+                        fontWeight: '600',
+                        fontSize: game.gridSpan >= 2 ? '0.875rem' : '0.75rem',
+                        textShadow: '0 1px 4px rgba(0,0,0,0.8)',
+                        margin: '0 0 0.25rem 0',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        {game.name}
+                      </p>
+                      <p style={{ 
                         color: '#60a5fa', 
                         fontWeight: '700',
                         fontSize: game.gridSpan >= 2 ? '1rem' : '0.875rem',
@@ -329,7 +316,6 @@ export default function SteamBanner() {
           </div>
         )}
 
-        {/* Modal de información del juego */}
         {selectedGame && (
           <div
             style={{
@@ -398,7 +384,7 @@ export default function SteamBanner() {
                 {selectedGame.name}
               </h2>
 
-              <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 480 ? '1fr' : '1fr 1fr', gap: 'clamp(0.5rem, 2vw, 1rem)', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth < 480 ? '1fr' : '1fr 1fr', gap: 'clamp(0.5rem, 2vw, 1rem)', marginBottom: '1.5rem' }}>
                 <div style={{ backgroundColor: '#16213e', padding: 'clamp(0.75rem, 2vw, 1rem)', borderRadius: '0.5rem' }}>
                   <p style={{ color: '#93c5fd', fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)', margin: '0 0 0.5rem 0' }}>Horas jugadas</p>
                   <p style={{ color: '#60a5fa', fontSize: 'clamp(1.25rem, 3vw, 1.5rem)', fontWeight: 'bold', margin: 0 }}>
@@ -413,12 +399,14 @@ export default function SteamBanner() {
                 </div>
               </div>
 
-              <div style={{ backgroundColor: '#16213e', padding: 'clamp(0.75rem, 2vw, 1rem)', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
-                <p style={{ color: '#93c5fd', fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)', margin: '0 0 0.5rem 0' }}>Descripción</p>
-                <p style={{ color: '#cbd5e1', fontSize: 'clamp(0.875rem, 2vw, 0.95rem)', margin: 0, lineHeight: '1.5' }}>
-                  {selectedGame.description}
-                </p>
-              </div>
+              {selectedGame.description && (
+                <div style={{ backgroundColor: '#16213e', padding: 'clamp(0.75rem, 2vw, 1rem)', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
+                  <p style={{ color: '#93c5fd', fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)', margin: '0 0 0.5rem 0' }}>Descripción</p>
+                  <p style={{ color: '#cbd5e1', fontSize: 'clamp(0.875rem, 2vw, 0.95rem)', margin: 0, lineHeight: '1.5' }}>
+                    {selectedGame.description}
+                  </p>
+                </div>
+              )}
 
               <button
                 onClick={() => setSelectedGame(null)}
