@@ -128,55 +128,65 @@ export default function SteamBanner() {
 
       {/* Contenido principal */}
       {games.length > 0 ? (
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '0 1rem 1rem', gap: '1rem', overflow: 'auto' }}>
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '0 1rem 1rem', gap: '1rem', overflow: 'hidden' }}>
           <div 
             id="steam-banner"
             style={{ 
               background: '#1b2838',
               borderRadius: '0.5rem',
               border: '2px solid rgba(59, 130, 246, 0.3)',
-              padding: '1.5rem'
+              padding: '1.5rem',
+              flex: 1,
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem'
             }}
           >
+            {/* Usuario de Steam - Header */}
+            {profile && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                paddingBottom: '1rem',
+                borderBottom: '2px solid rgba(59, 130, 246, 0.3)'
+              }}>
+                <img 
+                  src={profile.avatar} 
+                  alt={profile.username}
+                  style={{ 
+                    width: '60px', 
+                    height: '60px', 
+                    borderRadius: '0.5rem', 
+                    border: '2px solid rgba(59, 130, 246, 0.5)'
+                  }}
+                />
+                <div>
+                  <p style={{ color: '#93c5fd', fontSize: '0.75rem', margin: '0 0 0.25rem 0' }}>Usuario de Steam</p>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#60a5fa', margin: 0 }}>
+                    {profile.username}
+                  </h3>
+                </div>
+              </div>
+            )}
+
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'white', margin: 0, textAlign: 'center' }}>
+              Mis Juegos Más Jugados
+            </h2>
+
             {/* Mosaico de juegos */}
             <div style={{ 
+              flex: 1,
+              minHeight: 0,
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gridAutoRows: 'minmax(85px, auto)',
               gap: '8px',
-              width: '100%'
+              width: '100%',
+              overflow: 'hidden',
+              alignContent: 'start'
             }}>
-              {profile && (
-                <div style={{
-                  gridColumn: 'span 1',
-                  backgroundColor: '#16213e',
-                  borderRadius: '0.5rem',
-                  padding: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  border: '2px solid rgba(59, 130, 246, 0.5)',
-                  aspectRatio: '16/9'
-                }}>
-                  <img 
-                    src={profile.avatar} 
-                    alt={profile.username}
-                    style={{ 
-                      width: '50px', 
-                      height: '50px', 
-                      borderRadius: '0.5rem', 
-                      border: '2px solid rgba(59, 130, 246, 0.5)'
-                    }}
-                  />
-                  <div style={{ textAlign: 'center' }}>
-                    <p style={{ color: '#93c5fd', fontSize: '0.65rem', margin: '0 0 0.25rem 0' }}>Usuario de Steam</p>
-                    <h3 style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#60a5fa', margin: 0 }}>
-                      {profile.username}
-                    </h3>
-                  </div>
-                </div>
-              )}
               {games.map((game, index) => {
                 // Calcular span basado en horas jugadas
                 let span = 1;
