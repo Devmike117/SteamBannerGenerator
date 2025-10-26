@@ -76,7 +76,7 @@ export default function SteamBanner() {
   };
 
   return (
-    <div style={{ height: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{ padding: '1rem', flexShrink: 0 }}>
         <div style={{ maxWidth: '90rem', margin: '0 auto' }}>
@@ -128,7 +128,7 @@ export default function SteamBanner() {
 
       {/* Contenido principal */}
       {games.length > 0 ? (
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '0 1rem 1rem', gap: '1rem', overflow: 'auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', padding: '0 1rem 1rem', gap: '1rem' }}>
           <div 
             id="steam-banner"
             style={{ 
@@ -136,8 +136,6 @@ export default function SteamBanner() {
               borderRadius: '0.5rem',
               border: '2px solid rgba(59, 130, 246, 0.3)',
               padding: '1.5rem',
-              flex: 1,
-              minHeight: 0,
               display: 'flex',
               flexDirection: 'column',
               gap: '1rem'
@@ -177,15 +175,11 @@ export default function SteamBanner() {
 
             {/* Mosaico de juegos */}
             <div style={{ 
-              flex: 1,
-              minHeight: 0,
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
               gridAutoRows: 'minmax(85px, auto)',
               gap: '8px',
-              width: '100%',
-              overflow: 'hidden',
-              alignContent: 'start'
+              width: '100%'
             }}>
               {games.map((game, index) => {
                 // Calcular span basado en horas jugadas
