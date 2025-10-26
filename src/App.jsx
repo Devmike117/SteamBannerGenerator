@@ -214,7 +214,7 @@ export default function SteamBanner() {
                 </div>
               )}
 
-              <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: 'bold', color: 'white', marginBottom: '1.5rem', textAlign: 'center', textShadow: '0 2px 10px rgba(0,0,0,0.5)', margin: 0 }}>
+              <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: 'bold', color: 'white', marginBottom: '2rem', textAlign: 'center', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
                 Mis Juegos Más Jugados
               </h2>
               
