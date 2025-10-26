@@ -109,44 +109,46 @@ export default function SteamBanner() {
   };
 
   {/* Calcular layout proporcional basado en horas jugadas */}
-  const getGameLayout = () => {
-    if (games.length === 0) return [];
+const getGameLayout = () => {
+  if (games.length === 0) return [];
 
-    const maxHours = Math.max(...games.map(g => g.hours));
-    const minHours = Math.min(...games.map(g => g.hours));
+  const maxHours = Math.max(...games.map(g => g.hours));
+  const minHours = Math.min(...games.map(g => g.hours));
 
-    return games.map((game, index) => {
-      const normalized = (game.hours - minHours) / (maxHours - minHours || 1);
+  return games.map((game, index) => {
+    const normalized = (game.hours - minHours) / (maxHours - minHours || 1);
 
-      let gridSpan;
-      if (normalized > 0.8) gridSpan = 3;
-      else if (normalized > 0.6) gridSpan = 2;
-      else if (normalized > 0.3) gridSpan = 2;
-      else gridSpan = 1;
+    // Asignar gridSpan proporcional
+    let gridSpan;
+    if (normalized > 0.8) gridSpan = 3;
+    else if (normalized > 0.6) gridSpan = 2;
+    else if (normalized > 0.3) gridSpan = 2;
+    else gridSpan = 1;
 
-      // Escala visual
-      const scale = 0.8 + normalized * 0.6; 
+    // 🔥 Escala más pronunciada: los menos jugados se reducen más
+    // Valor entre 0.4 y 1.0
+    const scale = 0.4 + normalized * 0.6;
 
-      return { 
-        ...game, 
-        gridSpan, 
-        scale, 
-        index 
-      };
-    });
-  };
+    return { 
+      ...game, 
+      gridSpan, 
+      scale, 
+      index 
+    };
+  });
+};
 
-  {/* Calcular número dinámico de columnas */}
-  const calculateColumns = () => {
-    const totalSpans = layoutGames.reduce((sum, g) => sum + g.gridSpan, 0);
-    const avgRowItems = Math.ceil(Math.sqrt(totalSpans / 1.4));
-    return Math.max(3, Math.min(6, avgRowItems));
-  };
+{/* Calcular número dinámico de columnas */}
+const calculateColumns = () => {
+  const totalSpans = layoutGames.reduce((sum, g) => sum + g.gridSpan, 0);
+  const avgRowItems = Math.ceil(Math.sqrt(totalSpans / 1.4));
+  return Math.max(3, Math.min(6, avgRowItems));
+};
 
-  const layoutGames = getGameLayout();
-  const gridColumns = calculateColumns();
+const layoutGames = getGameLayout();
+const gridColumns = calculateColumns();
 
-  <div
+<div
   className="grid gap-2"
   style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}
 >
@@ -157,6 +159,7 @@ export default function SteamBanner() {
       style={{
         gridColumn: `span ${g.gridSpan}`,
         transform: `scale(${g.scale})`,
+        transformOrigin: 'center center',
       }}
     >
       <img
