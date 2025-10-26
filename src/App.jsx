@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Gamepad2, Download, AlertCircle, Loader2 } from 'lucide-react';
 
+// v1.1 - Cleaned up banner download
 export default function SteamBanner() {
   const [steamId, setSteamId] = useState('');
   const [loading, setLoading] = useState(false);
