@@ -118,20 +118,23 @@ const getGameLayout = () => {
   return games.map((game, index) => {
     const normalized = (game.hours - minHours) / (maxHours - minHours || 1);
 
-    // Asignar gridSpan proporcional
+    // Escala visual más marcada
+    const scale = 0.4 + normalized * 0.6;
+
+    // 🔥 Tamaño real del grid (afecta espacio en pantalla)
     let gridSpan;
     if (normalized > 0.8) gridSpan = 3;
     else if (normalized > 0.6) gridSpan = 2;
     else if (normalized > 0.3) gridSpan = 2;
     else gridSpan = 1;
 
-    // 🔥 Escala más pronunciada: los menos jugados se reducen más
-    // Valor entre 0.4 y 1.0
-    const scale = 0.4 + normalized * 0.6;
+    // 🔸 Ajustar “rowSpan” también para altura real (más jugados = más altos)
+    const rowSpan = Math.ceil(scale * 3);
 
     return { 
       ...game, 
       gridSpan, 
+      rowSpan,
       scale, 
       index 
     };
@@ -149,7 +152,7 @@ const layoutGames = getGameLayout();
 const gridColumns = calculateColumns();
 
 <div
-  className="grid gap-2"
+  className="grid gap-2 auto-rows-[120px] sm:auto-rows-[150px]"
   style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}
 >
   {layoutGames.map((g) => (
@@ -158,6 +161,7 @@ const gridColumns = calculateColumns();
       className="relative overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105"
       style={{
         gridColumn: `span ${g.gridSpan}`,
+        gridRow: `span ${g.rowSpan}`,
         transform: `scale(${g.scale})`,
         transformOrigin: 'center center',
       }}
@@ -173,6 +177,7 @@ const gridColumns = calculateColumns();
     </div>
   ))}
 </div>
+
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a)', padding: '1rem' }}>
