@@ -47,23 +47,58 @@ export default function SteamBanner() {
 
   const downloadBanner = async () => {
     try {
-      // Use server-side generation via /api/banner for reliable image loading
-      const resp = await fetch(`/api/banner?steamId=${encodeURIComponent(steamId)}`);
-      if (!resp.ok) {
-        throw new Error(`Error ${resp.status}`);
+      const html2canvas = (await import('html2canvas')).default;
+      const banner = document.getElementById('steam-banner');
+      
+      const canvas = await html2canvas(banner, {
+        backgroundColor: '#1a1a2e',
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        imageTimeout: 10000
+      });
+      
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      let hasContent = false;
+      
+      for (let i = 3; i < data.length; i += 4) {
+        if (data[i] > 200) {
+          hasContent = true;
+          break;
+        }
       }
-      const blob = await resp.blob();
-      const url = URL.createObjectURL(blob);
+      
+      if (!hasContent) {
+        throw new Error('Canvas is empty');
+      }
+      
       const link = document.createElement('a');
-      link.href = url;
       link.download = `steam-banner-${steamId}.png`;
-      document.body.appendChild(link);
+      link.href = canvas.toDataURL('image/png');
       link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Error al descargar banner:', err);
-      setError('Error al descargar el banner: ' + err.message);
+      console.error('Error con html2canvas, usando servidor:', err);
+      try {
+        const resp = await fetch(`/api/banner?steamId=${encodeURIComponent(steamId)}`);
+        if (!resp.ok) {
+          throw new Error(`Error ${resp.status}`);
+        }
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `steam-banner-${steamId}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      } catch (serverErr) {
+        console.error('Error al descargar del servidor:', serverErr);
+        setError('Error al descargar el banner. Intenta de nuevo.');
+      }
     }
   };
 
